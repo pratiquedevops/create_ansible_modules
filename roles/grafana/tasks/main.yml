@@ -1,0 +1,64 @@
+---
+- name: let us test the module developed by M. RATOVO
+  mymodule0:
+  register: roro
+
+- name: let us test our own modules
+  printversion:
+    app: java
+    appv: 3.4
+  register: moro
+
+- debug:  
+    msg: 
+      - "{{ moro }}"
+      - "{{ cool }}------>{{ roro }}"
+  vars:
+    cool: "cool les gars vous etes fort!!"
+
+- name: Ensure /home/moro/grafana/rpms folder exists
+  file:
+    path: /home/moro/grafana/rpms
+    state: directory
+    mode: 0750
+    owner: moro
+    group: moro
+
+- name: copy rsync package from local to remote
+  become: yes
+  become_user: moro
+  copy:
+    src: assets/grafana/rpms/grafana-7.5.5-1.x86_64.rpm
+    dest: /home/moro/grafana/rpms
+
+- name: Ensuring that wheel is able to use sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+  become: yes
+
+- name: grafana install
+  yum:
+    name: /home/moro/grafana/rpms/grafana-7.5.5-1.x86_64.rpm
+    state: present
+  become: yes
+
+- name: Ensure grafana is running
+  service:
+    name: grafana-server
+    state: started
+    enabled: yes
+  become: yes
+
+- name: open grafana port on firewalld
+  firewalld:
+    port: 3000/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes 
+  become: yes 
+
+
+

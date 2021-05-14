@@ -1,0 +1,21 @@
+---
+- name: Ensure /home/moro/rsync/rpms folder exists
+  file:
+    path: /home/moro/rsync/rpms
+    state: directory
+    mode: 0750
+    owner: moro
+  become: yes
+
+- name: copy rsync pacakge from local to remote
+  become: yes
+  become_user: moro
+  copy:
+    src: assets/rsync/rpms/rsync-3.1.2-10.el7.x86_64.rpm
+    dest: /home/moro/rsync/rpms
+
+- name: rsync install
+  yum:
+    name: /home/moro/rsync/rpms/rsync-3.1.2-10.el7.x86_64.rpm
+    state: present
+  become: yes

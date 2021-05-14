@@ -1,0 +1,6 @@
+---
+- name: test des roles
+  hosts: inventory
+  roles:
+    - role: test
+      tags: test

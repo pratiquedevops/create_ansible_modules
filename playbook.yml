@@ -1,0 +1,8 @@
+---
+- name: test des roles
+  hosts: inventory
+  roles:
+    - role:  prometheus
+      tags:  prometheus
+    - role:  grafana
+      tags:  grafana

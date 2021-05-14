@@ -1,0 +1,9 @@
+---
+prometheus_rpms:
+  - prometheus2-2.25.2-1.el8.x86_64.rpm
+  - node_exporter-1.1.2-1.el8.x86_64.rpm
+prometheus_rpms_folder: prometheus/rpms
+
+prometheus_ports:
+  - 9090
+  - 9100

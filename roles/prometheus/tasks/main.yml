@@ -1,0 +1,47 @@
+---
+# tasks file for prometheus
+- name: "Ensure {{ prometheus_rpms_folder }} folder exists"
+  file:
+    path: "{{ prometheus_rpms_folder }}"
+    state: directory
+    mode: 0750
+    owner: moro
+    group: moro
+
+- name: synchronize rpm from local to remote
+  copy:
+    src:  "assets/prometheus/rpms/{{ item }}"
+    dest: "{{ prometheus_rpms_folder }}"
+  loop: "{{ prometheus_rpms }}"
+  become: yes
+
+- name: install prometheus 
+  yum:
+    name: "{{ prometheus_rpms_folder }}/{{ item }}"
+    state: present
+  loop: "{{ prometheus_rpms }}"
+  become: yes
+
+- name: Ensure node_exporter service is running
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Ensure prometheus service is running
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Open prometheus port and node_exporter port via firewalld
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop: "{{ prometheus_ports }}"
+  become: yes
+    

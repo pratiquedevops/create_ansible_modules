@@ -1,0 +1,32 @@
+---
+- name: ensure that config file exists
+  file: 
+    path: /etc/ssh/ 
+    state:  directory
+    mode:   0750      
+    owner:  moro
+    group:  moro
+
+- name: copy configfile to remote 
+  become: yes
+  become_user: moro
+  copy:
+    src: etc/ssh/sshd.conf
+    dest: /etc/ssh 
+
+
+
+
+
+#- name: Ensuring that wheel is able to use sudo without password
+#  lineinfile:
+#    path: /etc/sudoers
+#    regexp: '^%wheel'
+#    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+#    become: yes
+#    validate: 'visudo -cf %s'
+
+
+#    become_user: moro
+
+

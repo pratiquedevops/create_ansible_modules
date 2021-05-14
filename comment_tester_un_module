@@ -1,0 +1,40 @@
+
+this the command to test a new created module:
+
+ ansible localhost -m printversion -a "app=JAVA appv=3.4"
+
+
+
+
+Modules and plugins: what is the difference?
+
+If you are looking to add local functionality to Ansible, you might wonder whether you need a module or a plugin. Here is a quick overview to help you decide between the two:
+
+    Modules are reusable, standalone scripts that can be used by the Ansible API, the ansible command, or the ansible-playbook command. Modules provide a defined interface. Each module accepts arguments and returns information to Ansible by printing a JSON string to stdout before exiting. Modules execute on the target system (usually that means on a remote system) in separate processes.
+
+    Plugins augment Ansible’s core functionality and execute on the control node within the /usr/bin/ansible process. Plugins offer options and extensions for the core features of Ansible - transforming data, logging output, connecting to inventory, and more.
+
+Adding a module locally
+
+Ansible automatically loads all executable files found in certain directories as modules.
+
+For local modules, use the name of the file as the module name: for example, if the module file is ~/.ansible/plugins/modules/local_users.py, use local_users as the module name.
+
+To load your local modules automatically and make them available to all playbooks and roles, add them in any of these locations:
+
+    any directory added to the ANSIBLE_LIBRARY environment variable ($ANSIBLE_LIBRARY takes a colon-separated list like $PATH)
+
+    ~/.ansible/plugins/modules/
+
+    /usr/share/ansible/plugins/modules/
+
+After you save your module file in one of these locations, Ansible loads it and you can use it in any local task, playbook, or role.
+
+To confirm that my_custom_module is available:
+
+    type ansible localhost -m my_custom_module. You should see the output for that module.
+
+or
+
+    type ansible-doc -t module my_custom_module. You should see the documentation for that module.
+

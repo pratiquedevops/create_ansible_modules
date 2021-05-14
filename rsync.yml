@@ -1,0 +1,7 @@
+---
+- name: test des roles
+  become: yes
+  become_user: moro
+  hosts: inventory
+  roles:
+    - role: rsync

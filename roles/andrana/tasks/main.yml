@@ -1,0 +1,32 @@
+---
+- name: Ensure /home/mara/andrana/ folder exists
+  file:
+    path: /home/mara/andrana
+    state: directory
+    mode: 0750
+    owner: mara
+    group: mara
+
+- name: Add the user 'mara' with a specific uid and a primary group of 'wheel'
+  ansible.builtin.user:
+    name: mara
+    uid: 1008
+    group: wheel 
+
+- name: Add the user 'mara'  appending the group 'wheel' to the user's groups
+  ansible.builtin.user:
+    name: mara
+    shell: /bin/bash
+    groups: wheel
+    append: yes
+
+- name: Ensuring that wheel is able to use sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+  become: yes
+
+
+
